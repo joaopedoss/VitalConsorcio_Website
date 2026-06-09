@@ -1,20 +1,15 @@
 /**
  * api/upload.js — Vital Consórcio (Vercel Serverless Function)
- * Usa Cloudinary para armazenar arquivos — gratuito, sem Google Drive.
+ * Usa Supabase Storage — arquivos com nome e extensão corretos.
  *
  * ══════════════════════════════════════════════════════════════
- *  CONFIGURAÇÃO — adicione estas variáveis na Vercel:
- *  Settings → Environment Variables
- *
- *  CLOUDINARY_CLOUD_NAME  → seu cloud name (ex: dxyz1234)
- *  CLOUDINARY_API_KEY     → API Key
- *  CLOUDINARY_API_SECRET  → API Secret
+ *  Variáveis de ambiente na Vercel (Settings → Environment Variables):
+
  * ══════════════════════════════════════════════════════════════
  */
 
 import { IncomingForm } from 'formidable';
 import { readFileSync } from 'fs';
-import { createHash, createHmac } from 'crypto';
 
 export const config = { api: { bodyParser: false } };
 
@@ -25,15 +20,13 @@ function jsonErr(res, status, msg) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return jsonErr(res, 405, 'Método não permitido.');
 
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey    = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const secretKey   = process.env.SUPABASE_SECRET_KEY;
 
-  if (!cloudName || !apiKey || !apiSecret) {
-    return jsonErr(res, 500, 'Variáveis de ambiente Cloudinary não configuradas.');
+  if (!supabaseUrl || !secretKey) {
+    return jsonErr(res, 500, 'Variáveis de ambiente Supabase não configuradas.');
   }
 
-  /* Parse multipart */
   const form = new IncomingForm({ maxFileSize: 10 * 1024 * 1024 });
 
   form.parse(req, async (err, _fields, files) => {
@@ -42,56 +35,47 @@ export default async function handler(req, res) {
     const file = Array.isArray(files.arquivo) ? files.arquivo[0] : files.arquivo;
     if (!file) return jsonErr(res, 400, 'Nenhum arquivo enviado.');
 
-    const tiposPermitidos = [
-      'application/pdf', 'image/jpeg', 'image/png',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ];
-    if (!tiposPermitidos.includes(file.mimetype)) {
+    const tiposPermitidos = {
+      'application/pdf':       'pdf',
+      'image/jpeg':            'jpg',
+      'image/png':             'png',
+      'application/msword':    'doc',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+    };
+
+    if (!tiposPermitidos[file.mimetype]) {
       return jsonErr(res, 400, 'Tipo não permitido. Use PDF, JPG, PNG ou DOCX.');
     }
 
     try {
-      const fileBuffer = readFileSync(file.filepath);
-      const b64        = fileBuffer.toString('base64');
-      const dataUri    = `data:${file.mimetype};base64,${b64}`;
-      const timestamp  = Math.floor(Date.now() / 1000).toString();
-      const folder     = 'vital-consorcio';
-
-      /* Nome original sem caracteres inválidos */
+      const fileBuffer   = readFileSync(file.filepath);
       const originalName = (file.originalFilename || 'arquivo').replace(/[^a-zA-Z0-9._-]/g, '_');
+      const timestamp    = Date.now();
+      const fileName     = `${timestamp}_${originalName}`;
 
-      /* Assina a requisição */
-      const toSign    = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
-      const signature = createHash('sha1').update(toSign).digest('hex');
-
-      /* Monta form data para Cloudinary */
-      const formData = new FormData();
-      formData.append('file',       dataUri);
-      formData.append('api_key',    apiKey);
-      formData.append('timestamp',  timestamp);
-      formData.append('signature',  signature);
-      formData.append('folder',     folder);
-      formData.append('resource_type', 'auto');
-
-      /* PDFs e DOCX devem usar endpoint 'raw', imagens usam 'image' */
-      const isImage    = ['image/jpeg', 'image/png'].includes(file.mimetype);
-      const endpoint   = isImage ? 'image' : 'raw';
-
+      /* Upload para Supabase Storage no bucket 'uploads' */
       const uploadRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/${endpoint}/upload`,
-        { method: 'POST', body: formData }
+        `${supabaseUrl}/storage/v1/object/uploads/${fileName}`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${secretKey}`,
+            'Content-Type':  file.mimetype,
+            'x-upsert':      'true',
+          },
+          body: fileBuffer,
+        }
       );
 
-      const data = await uploadRes.json();
-
-      if (!data.secure_url) {
-        throw new Error('Cloudinary: ' + (data.error?.message || JSON.stringify(data)));
+      if (!uploadRes.ok) {
+        const errData = await uploadRes.json().catch(() => ({}));
+        throw new Error('Supabase: ' + (errData.message || uploadRes.statusText));
       }
 
-      /* Monta URL com nome original para forçar extensão correta no download */
-      const baseUrl    = data.secure_url.replace('/upload/', '/upload/fl_attachment:' + originalName + '/');
-      res.status(200).json({ sucesso: true, link: baseUrl });
+      /* URL pública do arquivo */
+      const publicUrl = `${supabaseUrl}/storage/v1/object/public/uploads/${fileName}`;
+
+      res.status(200).json({ sucesso: true, link: publicUrl });
 
     } catch (e) {
       jsonErr(res, 500, e.message);
