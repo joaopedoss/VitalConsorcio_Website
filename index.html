@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vital Consórcio - Compra e Venda de Consórcios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --verde: #1a5c3a;
+    --verde-escuro: #0f3d25;
+    --verde-claro: #2e8b57;
+    --verde-hover: #22754a;
+    --dourado: #c9a84c;
+    --dourado-hover: #b5922f;
+    --off-white: #f7f5f0;
+    --cinza-claro: #ececea;
+    --cinza-texto: #5a5955;
+    --texto: #1c1a18;
+    --branco: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    background: var(--branco);
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid rgba(26,92,58,0.1);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 70px;
+    backdrop-filter: blur(8px);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: var(--verde);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 24px; height: 24px; fill: white; }
+  .logo-text {
+    display: flex; flex-direction: column; line-height: 1.1;
+  }
+  .logo-text span:first-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--verde-escuro);
+    letter-spacing: -0.3px;
+  }
+  .logo-text span:last-child {
+    font-size: 10px; font-weight: 500;
+    color: var(--dourado);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  .nav-links { display: flex; align-items: center; gap: 36px; }
+  .nav-links a {
+    text-decoration: none; font-size: 14px; font-weight: 500;
+    color: var(--cinza-texto); letter-spacing: 0.2px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--verde); }
+
+  .nav-cta {
+    background: var(--verde);
+    color: white !important;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--verde-hover) !important; color: white !important; }
+
+  /* ── HERO ── */
+  #home {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--verde-escuro) 0%, var(--verde) 50%, var(--verde-claro) 100%);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 120px 5% 80px;
+  }
+  #home::before {
+    content: '';
+    position: absolute; top: -40%; right: -15%;
+    width: 70vw; height: 70vw;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
+  }
+  #home::after {
+    content: '';
+    position: absolute; bottom: -20%; left: -10%;
+    width: 50vw; height: 50vw;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.08);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--dourado);
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-badge::before { content: '●'; font-size: 8px; }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800; color: white;
+    line-height: 1.15; letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  .hero-title em { font-style: normal; color: var(--dourado); }
+
+  .hero-sub {
+    font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75);
+    line-height: 1.7; margin-bottom: 36px; max-width: 480px;
+  }
+
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--dourado); color: var(--verde-escuro);
+    font-weight: 700; font-size: 15px;
+    padding: 14px 28px; border-radius: 10px; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--dourado-hover); transform: translateY(-1px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: white;
+    font-weight: 600; font-size: 15px;
+    padding: 13px 26px; border-radius: 10px; text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.4); cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 48px; padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px; font-weight: 800; color: white; line-height: 1;
+  }
+  .stat-num span { color: var(--dourado); }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  .hero-right { position: relative; }
+  .hero-card-stack {
+    position: relative; width: 100%; aspect-ratio: 1 / 1.1; max-width: 420px;
+    margin-left: auto;
+  }
+  .hcard {
+    position: absolute;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 28px;
+    color: white;
+    transition: transform 0.3s;
+  }
+  .hcard:hover { transform: translateY(-4px); }
+  .hcard-main {
+    width: 100%; bottom: 0; left: 0;
+    background: white;
+    color: var(--texto);
+    border: none;
+  }
+  .hcard-main h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; margin-bottom: 16px; color: var(--verde-escuro);
+  }
+  .hcard-float {
+    width: 78%; top: 0; right: 0;
+    border-radius: 16px;
+    z-index: 2;
+  }
+  .hcard-float .hf-label {
+    font-size: 11px; opacity: 0.7; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .hcard-float .hf-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag {
+    background: var(--cinza-claro); color: var(--cinza-texto);
+    border-radius: 100px; font-size: 12px; font-weight: 500;
+    padding: 4px 12px;
+  }
+  .tag.green { background: #d1f0e0; color: var(--verde-escuro); }
+  .steps-mini { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .step-mini {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--cinza-texto);
+  }
+  .step-mini .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--verde); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 96px 5%; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--dourado); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 44px); font-weight: 800;
+    color: var(--verde-escuro); line-height: 1.2; letter-spacing: -0.5px;
+    margin-bottom: 18px;
+  }
+  .section-sub {
+    font-size: 16px; color: var(--cinza-texto); line-height: 1.7; max-width: 560px;
+  }
+
+  /* ── SOBRE ── */
+  #sobre { background: var(--off-white); }
+  .sobre-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .sobre-left {}
+  .sobre-years {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: 80px; font-weight: 800; color: var(--verde);
+    line-height: 1;
+  }
+  .sobre-years span { font-size: 28px; color: var(--cinza-texto); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+  .sobre-visual-line { width: 60px; height: 3px; background: var(--dourado); margin: 20px 0; }
+
+  .sobre-right {}
+  .sobre-feats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px;
+  }
+  .feat-item {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 18px;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .feat-item:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .feat-icon {
+    width: 40px; height: 40px; background: #e8f5ee;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .feat-icon svg { width: 20px; height: 20px; stroke: var(--verde); fill: none; stroke-width: 2; }
+  .feat-item h4 { font-size: 14px; font-weight: 600; color: var(--verde-escuro); margin-bottom: 4px; }
+  .feat-item p { font-size: 13px; color: var(--cinza-texto); line-height: 1.5; }
+
+  /* ── COMO FUNCIONA ── */
+  #como-funciona { background: white; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute; top: 44px; left: 16.66%; right: 16.66%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--verde) 0, var(--verde) 8px, transparent 8px, transparent 18px);
+    z-index: 0;
+  }
+  .step-card {
+    background: var(--off-white); border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center; position: relative; z-index: 1;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .step-card:hover { background: var(--verde); transform: translateY(-4px); }
+  .step-card:hover .step-num { background: rgba(255,255,255,0.2); color: white; }
+  .step-card:hover h3, .step-card:hover p { color: white; }
+  .step-num {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--verde); color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    transition: background 0.3s;
+  }
+  .step-card h3 { font-size: 17px; font-weight: 700; color: var(--verde-escuro); margin-bottom: 10px; transition: color 0.3s; }
+  .step-card p { font-size: 14px; color: var(--cinza-texto); line-height: 1.6; transition: color 0.3s; }
+
+  .steps-cta { text-align: center; margin-top: 52px; display: flex; justify-content: center; gap: 16px; }
+  .btn-green {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--verde); color: white;
+    font-weight: 700; font-size: 15px;
+    padding: 14px 30px; border-radius: 10px; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-green:hover { background: var(--verde-hover); transform: translateY(-1px); }
+  .btn-gold {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--dourado); color: var(--verde-escuro);
+    font-weight: 700; font-size: 15px;
+    padding: 14px 30px; border-radius: 10px; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-gold:hover { background: var(--dourado-hover); transform: translateY(-1px); }
+
+  /* ── TIPOS ── */
+  #tipos { background: var(--verde-escuro); }
+  #tipos .section-title { color: white; }
+  #tipos .section-sub { color: rgba(255,255,255,0.65); }
+  #tipos .section-label { color: var(--dourado); }
+  .tipos-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 52px;
+  }
+  .tipo-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 32px 24px;
+    text-align: center; color: white;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .tipo-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-3px); }
+  .tipo-icon {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .tipo-icon svg { width: 28px; height: 28px; stroke: var(--dourado); fill: none; stroke-width: 1.8; }
+  .tipo-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .tipo-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+  /* ── CONTATO ── */
+  #contato { background: var(--off-white); }
+  .contato-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 72px; align-items: start;
+  }
+  .contato-info h2 { margin-bottom: 18px; }
+  .contact-items { display: flex; flex-direction: column; gap: 18px; margin-top: 32px; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .cicon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--verde); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cicon svg { width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 2; }
+  .cinfo h4 { font-size: 13px; font-weight: 600; color: var(--verde-escuro); margin-bottom: 2px; }
+  .cinfo p, .cinfo a { font-size: 14px; color: var(--cinza-texto); text-decoration: none; }
+  .cinfo a:hover { color: var(--verde); }
+
+  .form-card {
+    background: white; border-radius: 20px; padding: 40px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+  }
+  .form-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: var(--verde-escuro);
+    margin-bottom: 24px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: var(--verde-escuro); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 11px 14px; border-radius: 10px;
+    border: 1.5px solid var(--cinza-claro); font-size: 14px;
+    font-family: 'DM Sans', sans-serif; color: var(--texto);
+    background: var(--off-white);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--verde);
+    background: white;
+  }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+
+  /* File upload field */
+  .file-upload-label {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 20px 16px;
+    border: 2px dashed var(--cinza-claro);
+    border-radius: 10px; cursor: pointer;
+    background: var(--off-white);
+    transition: border-color 0.2s, background 0.2s;
+    text-align: center;
+  }
+  .file-upload-label:hover { border-color: var(--verde); background: #edf7f2; }
+  .file-upload-label.has-file { border-color: var(--verde); background: #edf7f2; }
+  .file-upload-label svg { width: 28px; height: 28px; stroke: var(--cinza-texto); transition: stroke 0.2s; }
+  .file-upload-label:hover svg, .file-upload-label.has-file svg { stroke: var(--verde); }
+  .file-upload-label .fu-title { font-size: 13px; font-weight: 600; color: var(--verde-escuro); }
+  .file-upload-label .fu-hint { font-size: 11px; color: var(--cinza-texto); }
+  .file-upload-label .fu-name { font-size: 12px; font-weight: 600; color: var(--verde); display: none; }
+  .file-upload-label.has-file .fu-title { display: none; }
+  .file-upload-label.has-file .fu-hint { display: none; }
+  .file-upload-label.has-file .fu-name { display: block; }
+  #arquivo-input { display: none; }
+
+  /* Upload progress bar */
+  .upload-progress {
+    display: none; margin-top: 8px;
+    background: var(--cinza-claro); border-radius: 100px; height: 6px; overflow: hidden;
+  }
+  .upload-progress-bar {
+    height: 100%; width: 0%; background: var(--verde);
+    border-radius: 100px; transition: width 0.3s;
+  }
+  .form-submit {
+    width: 100%; padding: 14px;
+    background: var(--verde); color: white;
+    font-size: 15px; font-weight: 700;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--verde-hover); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--verde-escuro); color: rgba(255,255,255,0.7);
+    padding: 56px 5% 32px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px;
+    padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-brand p { font-size: 14px; line-height: 1.7; margin-top: 14px; color: rgba(255,255,255,0.55); }
+  .footer-col h4 { font-size: 13px; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .footer-col a {
+    display: block; font-size: 13px; color: rgba(255,255,255,0.55);
+    text-decoration: none; margin-bottom: 10px; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--dourado); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 28px; font-size: 13px; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo-white span:first-child {
+    font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: white;
+  }
+  .footer-logo-white span:last-child { font-size: 9px; color: var(--dourado); letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: 1px; }
+
+  /* ── WHATSAPP FLOAT ── */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 2000;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: #25d366;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: pulse-wa 2.5s infinite;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
+  .wa-float svg { width: 30px; height: 30px; fill: white; }
+  @keyframes pulse-wa {
+    0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 6px 40px rgba(37,211,102,0.7); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-right { display: none; }
+    .sobre-grid, .contato-grid { grid-template-columns: 1fr; gap: 48px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .steps-grid::before { display: none; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .form-row { grid-template-columns: 1fr; }
+    nav { padding: 0 4%; }
+    .nav-links { gap: 20px; }
+  }
+  @media (max-width: 600px) {
+    .nav-links a:not(.nav-cta):not(:last-of-type) { display: none; }
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+    .sobre-feats { grid-template-columns: 1fr; }
+    .tipos-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#home" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="logo-text">
+      <span>Vital Consórcio</span>
+      <span>O Essencial</span>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#sobre">Sobre Nós</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#contato">Contato</a>
+    <a href="https://wa.me/5511930223697?text=Olá, tenho interesse em vender meu consórcio!" class="nav-cta" target="_blank">Fale com um Consultor</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">Desde 1989 no mercado</div>
+      <h1 class="hero-title">
+        Transforme seu<br>consórcio em<br><em>dinheiro real</em>
+      </h1>
+      <p class="hero-sub">
+        Compramos cotas em andamento, atrasadas, contempladas e canceladas de todas as administradoras. Pagamento imediato via PIX, TED ou DOC.
+      </p>
+      <div class="hero-btns">
+        <a href="#contato" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Quero uma Proposta
+        </a>
+        <a href="https://wa.me/5511930223697?text=Olá, tenho interesse em vender meu consórcio!" class="btn-outline" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">35<span>+</span></div>
+          <div class="stat-label">Anos de experiência</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100<span>%</span></div>
+          <div class="stat-label">Digital e seguro</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">24h</div>
+          <div class="stat-label">Proposta garantida</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-card-stack">
+        <div class="hcard hcard-float">
+          <div class="hf-label">Sua proposta em até</div>
+          <div class="hf-value">24 horas</div>
+          <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span style="background:rgba(255,255,255,0.15); border-radius:100px; padding: 4px 12px; font-size: 12px;">✓ Cotas ativas</span>
+            <span style="background:rgba(255,255,255,0.15); border-radius:100px; padding: 4px 12px; font-size: 12px;">✓ Canceladas</span>
+            <span style="background:rgba(255,255,255,0.15); border-radius:100px; padding: 4px 12px; font-size: 12px;">✓ Contempladas</span>
+          </div>
+        </div>
+        <div class="hcard hcard-main">
+          <h3>Como receber seu dinheiro</h3>
+          <div class="steps-mini">
+            <div class="step-mini"><div class="dot">1</div><span>Preencha o formulário com dados da cota</span></div>
+            <div class="step-mini"><div class="dot">2</div><span>Receba nossa avaliação e proposta</span></div>
+            <div class="step-mini"><div class="dot">3</div><span>Assine digitalmente e receba via PIX</span></div>
+          </div>
+          <div class="tag-row">
+            <span class="tag green">✓ Sem intermediários</span>
+            <span class="tag">LGPD</span>
+            <span class="tag">100% Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-inner">
+    <div class="sobre-grid">
+      <div class="sobre-left">
+        <span class="section-label">Nossa história</span>
+        <div class="sobre-years">35 <span>anos</span></div>
+        <div class="sobre-visual-line"></div>
+        <h2 class="section-title">Por que escolher a Vital Consórcio?</h2>
+        <p style="font-size: 15px; color: var(--cinza-texto); line-height: 1.75; margin-bottom: 16px;">
+          Desde 1989 atuamos no mercado de compra e venda de consórcios. Com sede na Rua Domingos de Moraes, 254 – Vila Mariana, São Paulo, somos referência em transparência e seriedade.
+        </p>
+        <p style="font-size: 15px; color: var(--cinza-texto); line-height: 1.75;">
+          Trabalhamos diretamente com o cliente, sem intermediação, o que nos permite oferecer a melhor avaliação do mercado. Compramos consórcios ativos, atrasados, cancelados e contemplados — de automóveis, caminhões e imóveis.
+        </p>
+        <a href="#contato" class="btn-green" style="margin-top: 32px; display: inline-flex;">
+          Fale conosco
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="sobre-right">
+        <p class="section-sub" style="margin-bottom: 0;">Nossos diferenciais que fazem toda a diferença:</p>
+        <div class="sobre-feats">
+          <div class="feat-item">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h4>Segurança e Credibilidade</h4>
+            <p>Operação 100% digital com validade jurídica. Seus dados protegidos pela LGPD.</p>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h4>Agilidade no Pagamento</h4>
+            <p>PIX, TED ou DOC assim que o contrato digital é assinado. Sem enrolação.</p>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h4>Sem Intermediários</h4>
+            <p>Compramos diretamente de você. Melhor avaliação de mercado garantida.</p>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <h4>Negociação Flexível</h4>
+            <p>Condições personalizadas para cada cota. Atendemos PF e PJ em todo o Brasil.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="section-inner">
+    <div style="text-align: center;">
+      <span class="section-label">Processo simples</span>
+      <h2 class="section-title" style="max-width: 500px; margin: 0 auto 16px;">Três passos para receber seu dinheiro</h2>
+      <p class="section-sub" style="margin: 0 auto; text-align: center;">Processo 100% digital, seguro e rápido. Do cadastro ao pagamento na sua conta.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Formulário de Cadastro</h3>
+        <p>Preencha nosso formulário em menos de 1 minuto com seus dados e os dados da sua cota de consórcio.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Avaliação e Proposta</h3>
+        <p>Nossa equipe especializada analisa sua cota e envia uma proposta de compra em até 24 horas úteis.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Dinheiro na Conta</h3>
+        <p>Após a assinatura do contrato digital com validade jurídica, o pagamento é realizado imediatamente.</p>
+      </div>
+    </div>
+
+    <div class="steps-cta">
+      <a href="#contato" class="btn-gold">Preencher Formulário</a>
+      <a href="https://wa.me/5511930223697?text=Olá, tenho interesse em vender meu consórcio!" class="btn-green" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chamar no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOS DE CONSÓRCIO -->
+<section id="tipos">
+  <div class="section-inner">
+    <div style="text-align: center;">
+      <span class="section-label">O que compramos</span>
+      <h2 class="section-title">Todas as categorias</h2>
+      <p class="section-sub" style="margin: 0 auto; text-align: center;">Compramos consórcios das maiores e melhores administradoras do Brasil, em qualquer situação.</p>
+    </div>
+
+    <div class="tipos-grid">
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h3>Automóveis</h3>
+        <p>Carros de passeio de todas as marcas e administradoras</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m-4 12H8m-1-5h10a2 2 0 002-2V9a2 2 0 00-2-2H8a2 2 0 00-2 2v10h0a2 2 0 002 2z"/></svg>
+        </div>
+        <h3>Caminhões</h3>
+        <p>Veículos de carga pesada, semipesados e utilitários</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Imóveis</h3>
+        <p>Residenciais, comerciais, terrenos e quitação de financiamentos</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>Cotas Atrasadas</h3>
+        <p>Compramos mesmo com parcelas em atraso, sem burocracia</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3>Contempladas</h3>
+        <p>Cotas já contempladas por sorteio ou lance</p>
+      </div>
+      <div class="tipo-card">
+        <div class="tipo-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+        </div>
+        <h3>Canceladas</h3>
+        <p>Cotas canceladas de qualquer administradora do Brasil</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="section-inner">
+    <div class="contato-grid">
+      <div class="contato-info">
+        <span class="section-label">Entre em contato</span>
+        <h2 class="section-title">Fale com um especialista</h2>
+        <p class="section-sub">Tire todas as suas dúvidas. Nossa equipe está pronta para avaliar sua cota e apresentar a melhor proposta do mercado.</p>
+
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="cicon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="cinfo">
+              <h4>Endereço</h4>
+              <p>Rua Domingos de Moraes, 254, 6º andar<br>Vila Mariana – São Paulo/SP</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="cicon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .92h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div class="cinfo">
+              <h4>Telefone</h4>
+              <a href="tel:1199999999">(11) 93022-3697</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="cicon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="cinfo">
+              <h4>E-mail</h4>
+              <a href="mailto:contato@vitalconsorcio.com.br">contato@vitalconsorcio.com.br</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="cicon" style="background: #25d366;">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <div class="cinfo">
+              <h4>WhatsApp</h4>
+              <a href="https://wa.me/5511930223697" target="_blank">(11) 93022-3697</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3>Solicite uma avaliação gratuita</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome completo</label>
+            <input type="text" placeholder="Seu nome">
+          </div>
+          <div class="form-group">
+            <label>CPF / CNPJ</label>
+            <input type="text" placeholder="000.000.000-00">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label>Telefone / WhatsApp</label>
+            <input type="tel" placeholder="(11) 9 0000-0000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Administradora do Consórcio</label>
+          <select>
+            <option value="">Selecione a administradora</option>
+            <option>Bradesco</option>
+            <option>Itaú</option>
+            <option>Porto Seguro</option>
+            <option>Scania</option>
+            <option>Santander</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Grupo</label>
+            <input type="text" placeholder="Número do grupo">
+          </div>
+          <div class="form-group">
+            <label>Cota</label>
+            <input type="text" placeholder="Número da cota">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mensagem (opcional)</label>
+          <textarea placeholder="Conte mais sobre sua cota..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Documento / Extrato da Cota <span style="font-weight:400;color:var(--cinza-texto)">(opcional)</span></label>
+          <label class="file-upload-label" id="file-label" for="arquivo-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span class="fu-title">Clique para anexar arquivo</span>
+            <span class="fu-hint">PDF, JPG, PNG ou DOCX · máx. 10 MB</span>
+            <span class="fu-name" id="fu-name-display"></span>
+          </label>
+          <input type="file" id="arquivo-input" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc">
+          <div class="upload-progress" id="upload-progress">
+            <div class="upload-progress-bar" id="upload-bar"></div>
+          </div>
+        </div>
+
+        <button class="form-submit" id="btn-enviar" onclick="enviarFormulario(this)">
+          Enviar Solicitação
+        </button>
+        <div id="form-msg" style="display:none; margin-top:14px; padding:12px 16px; border-radius:10px; font-size:14px; font-weight:500; text-align:center;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo-white">
+          <span>Vital Consórcio</span>
+          <span>O Essencial</span>
+        </div>
+        <p>Desde 1989 realizando negócios de compra e venda de consórcios com pessoas físicas e jurídicas em todo o Brasil. Transparência e seriedade em cada etapa.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Links</h4>
+        <a href="#home">Home</a>
+        <a href="#sobre">Sobre Nós</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <div class="footer-col">
+        <h4>Consórcios</h4>
+        <a href="#tipos">Automóveis</a>
+        <a href="#tipos">Caminhões</a>
+        <a href="#tipos">Imóveis</a>
+        <a href="#tipos">Cancelados</a>
+        <a href="#tipos">Contemplados</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <a href="tel:11930223697">(11) 93022-3697</a>
+        <a href="mailto:contato@vitalconsorcio.com.br">contato@vitalconsorcio.com.br</a>
+        <a href="https://wa.me/5511930223697" target="_blank">WhatsApp</a>
+        <a href="https://www.facebook.com/vitalconsorcio/" target="_blank">Facebook</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Vital Consórcio — Todos os direitos reservados.</span>
+      <span>Vila Mariana, São Paulo / SP</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/5511930223697?text=Olá, tenho interesse em vender meu consórcio!" class="wa-float" target="_blank" title="Fale conosco pelo WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  /* ════════════════════════════════════════════
+     CONFIGURAÇÃO — preencha com suas chaves
+     ════════════════════════════════════════════
+     EmailJS:
+       1. emailjs.com → Email Services → conecte Gmail (jpss06joao@gmail.com) → copie Service ID
+       2. Email Templates → crie template com as variáveis abaixo → copie Template ID
+          Variáveis: {{nome}} {{cpf}} {{email}} {{telefone}} {{administradora}}
+                     {{grupo}} {{cota}} {{mensagem}} {{arquivo_link}}
+       3. Account → API Keys → copie Public Key
+
+     No template do EmailJS, adicione algo como:
+       Arquivo enviado: {{arquivo_link}}
+  */
+  const EMAILJS_SERVICE_ID  = 'service_z0jnyvi';
+  const EMAILJS_TEMPLATE_ID = 'template_019bpse';
+  const EMAILJS_PUBLIC_KEY  = 'sZyhIJO_XU2u4UWru';
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  /* ── Navbar scroll ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* ── Hamburger menu ── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ── File input: preview do nome ── */
+  const arquivoInput = document.getElementById('arquivo-input');
+  const fileLabel    = document.getElementById('file-label');
+  const fuNameDisplay = document.getElementById('fu-name-display');
+
+  arquivoInput.addEventListener('change', () => {
+    const file = arquivoInput.files[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        mostrarMsg('⚠ Arquivo muito grande. Tamanho máximo: 10 MB.', 'erro');
+        arquivoInput.value = '';
+        fileLabel.classList.remove('has-file');
+        return;
+      }
+      fuNameDisplay.textContent = '📎 ' + file.name;
+      fileLabel.classList.add('has-file');
+    } else {
+      fileLabel.classList.remove('has-file');
+    }
+  });
+
+  /* ── Mensagens de feedback ── */
+  function mostrarMsg(texto, tipo) {
+    const el = document.getElementById('form-msg');
+    el.textContent = texto;
+    el.style.display = 'block';
+    el.style.background = tipo === 'sucesso' ? '#d1f0e0' : '#fde8e8';
+    el.style.color      = tipo === 'sucesso' ? '#0f3d25'  : '#7f1d1d';
+    el.style.border     = tipo === 'sucesso' ? '1px solid #2e8b57' : '1px solid #f87171';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function setProgresso(pct) {
+    const wrap = document.getElementById('upload-progress');
+    const bar  = document.getElementById('upload-bar');
+    if (pct > 0) { wrap.style.display = 'block'; bar.style.width = pct + '%'; }
+    else         { wrap.style.display = 'none';  bar.style.width = '0%'; }
+  }
+
+  /* ── Upload do arquivo para o PHP/Google Drive ── */
+  async function uploadArquivo(file) {
+    return new Promise((resolve, reject) => {
+      const xhr  = new XMLHttpRequest();
+      const data = new FormData();
+      data.append('arquivo', file);
+
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) setProgresso(Math.round(e.loaded / e.total * 90));
+      };
+
+      xhr.onload = () => {
+        setProgresso(100);
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (res.sucesso && res.link) resolve(res.link);
+          else reject(res.erro || 'Falha no upload');
+        } catch { reject('Resposta inválida do servidor'); }
+      };
+
+      xhr.onerror = () => reject('Erro de conexão com o servidor');
+
+      xhr.open('POST', '/api/upload');
+      xhr.send(data);
+    });
+  }
+
+  /* ── Envio principal ── */
+  async function enviarFormulario(btn) {
+    const inputs = document.querySelectorAll('#contato input:not(#arquivo-input), #contato select, #contato textarea');
+    const nome   = inputs[0].value.trim();
+    const cpf    = inputs[1].value.trim();
+    const email  = inputs[2].value.trim();
+    const tel    = inputs[3].value.trim();
+    const adm    = inputs[4].value;
+    const grupo  = inputs[5].value.trim();
+    const cota   = inputs[6].value.trim();
+    const msg    = inputs[7].value.trim();
+    const file   = arquivoInput.files[0] || null;
+
+    /* Validação */
+    if (!nome || !email || !tel) {
+      mostrarMsg('⚠ Preencha pelo menos Nome, E-mail e Telefone.', 'erro');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      mostrarMsg('⚠ Informe um e-mail válido.', 'erro');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = file ? 'Enviando arquivo...' : 'Enviando...';
+
+    let arquivoLink = 'Nenhum arquivo anexado';
+
+    /* Se houver arquivo, faz upload primeiro */
+    if (file) {
+      try {
+        arquivoLink = await uploadArquivo(file);
+        btn.textContent = 'Enviando e-mail...';
+        setProgresso(0);
+      } catch (err) {
+        mostrarMsg('✗ Falha ao enviar arquivo: ' + err + '. Tente novamente ou entre em contato pelo WhatsApp.', 'erro');
+        btn.textContent = 'Enviar Solicitação';
+        btn.disabled = false;
+        setProgresso(0);
+        return;
+      }
+    }
+
+    /* Envia e-mail via EmailJS */
+    const params = {
+      nome, cpf: cpf || '—', email,
+      telefone: tel,
+      administradora: adm || '—',
+      grupo: grupo || '—',
+      cota: cota || '—',
+      mensagem: msg || '—',
+      arquivo_link: arquivoLink
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .then(() => {
+        mostrarMsg('✓ Solicitação enviada com sucesso! Entraremos em contato em breve.', 'sucesso');
+        btn.textContent = '✓ Enviado!';
+        btn.style.background = '#2e8b57';
+        inputs.forEach(i => { i.value = ''; });
+        arquivoInput.value = '';
+        fileLabel.classList.remove('has-file');
+        setTimeout(() => {
+          btn.textContent = 'Enviar Solicitação';
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 4000);
+      })
+      .catch(err => {
+        console.error('EmailJS erro:', err);
+        mostrarMsg('✗ Falha ao enviar e-mail. Tente pelo WhatsApp.', 'erro');
+        btn.textContent = 'Enviar Solicitação';
+        btn.disabled = false;
+      });
+  }
+</script>
+</body>
+</html>
