@@ -58,12 +58,11 @@ export default async function handler(req, res) {
       const timestamp  = Math.floor(Date.now() / 1000).toString();
       const folder     = 'vital-consorcio';
 
-      /* Nome do arquivo sem caracteres inválidos, mantendo extensão */
+      /* Nome original sem caracteres inválidos */
       const originalName = (file.originalFilename || 'arquivo').replace(/[^a-zA-Z0-9._-]/g, '_');
-      const publicId     = `${folder}/${originalName}`;
 
-      /* Assina a requisição incluindo public_id */
-      const toSign    = `folder=${folder}&public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+      /* Assina a requisição */
+      const toSign    = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
       const signature = createHash('sha1').update(toSign).digest('hex');
 
       /* Monta form data para Cloudinary */
@@ -73,7 +72,6 @@ export default async function handler(req, res) {
       formData.append('timestamp',  timestamp);
       formData.append('signature',  signature);
       formData.append('folder',     folder);
-      formData.append('public_id',  publicId);
       formData.append('resource_type', 'auto');
 
       /* PDFs e DOCX devem usar endpoint 'raw', imagens usam 'image' */
@@ -91,9 +89,8 @@ export default async function handler(req, res) {
         throw new Error('Cloudinary: ' + (data.error?.message || JSON.stringify(data)));
       }
 
-      /* Garante que o link force download com nome e extensão corretos */
-      const downloadLink = data.secure_url.replace('/upload/', '/upload/fl_attachment/');
-      res.status(200).json({ sucesso: true, link: downloadLink });
+      /* URL limpa — para raw o Cloudinary já entrega o arquivo com extensão correta */
+      res.status(200).json({ sucesso: true, link: data.secure_url });
 
     } catch (e) {
       jsonErr(res, 500, e.message);
