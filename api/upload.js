@@ -89,8 +89,9 @@ export default async function handler(req, res) {
         throw new Error('Cloudinary: ' + (data.error?.message || JSON.stringify(data)));
       }
 
-      /* URL limpa — para raw o Cloudinary já entrega o arquivo com extensão correta */
-      res.status(200).json({ sucesso: true, link: data.secure_url });
+      /* Monta URL com nome original para forçar extensão correta no download */
+      const baseUrl    = data.secure_url.replace('/upload/', '/upload/fl_attachment:' + originalName + '/');
+      res.status(200).json({ sucesso: true, link: baseUrl });
 
     } catch (e) {
       jsonErr(res, 500, e.message);
