@@ -71,8 +71,12 @@ export default async function handler(req, res) {
       formData.append('folder',     folder);
       formData.append('resource_type', 'auto');
 
+      /* PDFs e DOCX devem usar endpoint 'raw', imagens usam 'image' */
+      const isImage    = ['image/jpeg', 'image/png'].includes(file.mimetype);
+      const endpoint   = isImage ? 'image' : 'raw';
+
       const uploadRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+        `https://api.cloudinary.com/v1_1/${cloudName}/${endpoint}/upload`,
         { method: 'POST', body: formData }
       );
 
